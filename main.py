@@ -112,8 +112,15 @@ def solved():
 if __name__ == '__main__':
     print_sudoku()
     loop = 0
+    chance_nr = 1
     while not solved():
-        sudoku = find_nrs(sudoku)
-        loop += 1
-        print('loop', loop)
-        print_sudoku()
+        sudoku = copy.deepcopy(sudoku_2)
+        sudoku[0][2] = chance_nr
+        for i in range(100):
+            sudoku = find_nrs(sudoku)
+            loop += 1
+            print('loop', loop)
+            print_sudoku()
+            if solved():
+                break
+        chance_nr += 1
