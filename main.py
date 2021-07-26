@@ -1,10 +1,12 @@
 # import numpy as np
 import copy
 import math
+import time
+
 
 sudoku_original = [
     [0, 0, 6, 2, 0, 0, 0, 0, 7],
-    [0, 9, 0, 7, 0, 6, 0, 3, 0],
+    [0, 9, 0, 7, 0, 0, 0, 3, 0],
     [5, 0, 0, 0, 8, 4, 0, 0, 0],
     [1, 0, 8, 3, 0, 0, 0, 5, 0],
     [0, 0, 5, 0, 0, 0, 3, 0, 0],
@@ -35,6 +37,8 @@ sudoku = sudoku_2
 # ]
 
 size = len(sudoku[0])
+ch_nr_1 = 0
+ch_nr_2 = 0
 
 
 def print_sudoku():
@@ -109,18 +113,82 @@ def solved():
     return result
 
 
+def first_zero_row():
+    global sudoku
+    for row in range(size):
+        for col in range(size):
+            if sudoku[row][col] == 0:
+                return row
+    return -1
+
+
+def first_zero_col():
+    global sudoku
+    for row in range(size):
+        for col in range(size):
+            if sudoku[row][col] == 0:
+                return col
+    return -1
+
+
+def second_zero_row():
+    global sudoku
+    zeros = 0
+    for row in range(size):
+        for col in range(size):
+            if sudoku[row][col] == 0:
+                zeros += 1
+                if zeros == 2:
+                    # print('row', row)
+                    return row
+    return -1
+
+
+def second_zero_col():
+    global sudoku
+    zeros = 0
+    for row in range(size):
+        for col in range(size):
+            if sudoku[row][col] == 0:
+                zeros += 1
+                # time.sleep(0.001)
+                if zeros == 1:              # TODO: Expect it to be "if zeros == 2:". Don´t understand???
+                    # print('col', col)
+                    return col
+    return -1
+
+
+def chance_nr_1():
+    global ch_nr_1
+    if ch_nr_1 == 9:
+        ch_nr_1 = 1
+    else:
+        ch_nr_1 += 1
+    return ch_nr_1
+
+
+def chance_nr_2():
+    global ch_nr_1
+    global ch_nr_2
+    if ch_nr_1 == 1:
+        ch_nr_2 += 1
+    if ch_nr_1 == 1 and ch_nr_2 == 10:
+        ch_nr_2 = 1
+    return ch_nr_2
+
+
 if __name__ == '__main__':
     print_sudoku()
     loop = 0
-    chance_nr = 1
     while not solved():
+        # sudoku = copy.deepcopy(sudoku_original)
         sudoku = copy.deepcopy(sudoku_2)
-        sudoku[0][2] = chance_nr
-        for i in range(100):
+        sudoku[first_zero_row()][first_zero_col()] = chance_nr_1()
+        sudoku[second_zero_row()][second_zero_col()] = chance_nr_2()
+        for k in range(10):
             sudoku = find_nrs(sudoku)
             loop += 1
             print('loop', loop)
             print_sudoku()
             if solved():
                 break
-        chance_nr += 1
