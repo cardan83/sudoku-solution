@@ -1,10 +1,10 @@
-# import numpy as np
 import copy
 import math
-import time
+# import time
+# import numpy as np
 
 
-sudoku_original = [
+sudoku_nyteknik = [
     [0, 0, 6, 2, 0, 0, 0, 0, 7],
     [0, 9, 0, 7, 0, 0, 0, 3, 0],
     [5, 0, 0, 0, 8, 4, 0, 0, 0],
@@ -26,15 +26,18 @@ sudoku_2 = [
     [0, 0, 0, 4, 1, 9, 0, 0, 5],
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ]
-sudoku = sudoku_2
-# sudoku = sudoku_original
 
-# sudoku = [
-#     [3, 0, 4, 0],
-#     [0, 1, 0, 2],
-#     [0, 4, 0, 3],
-#     [2, 0, 1, 0]
-# ]
+sudoku_small = [
+    [3, 0, 4, 0],
+    [0, 1, 0, 2],
+    [0, 4, 0, 3],
+    [2, 0, 1, 0]
+]
+
+# current_sudoku_challenge = sudoku_nyteknik
+current_sudoku_challenge = sudoku_2
+# current_sudoku_challenge = sudoku_small
+sudoku = current_sudoku_challenge
 
 size = len(sudoku[0])
 ch_nr_1 = 0
@@ -180,9 +183,15 @@ def chance_nr_2():
 if __name__ == '__main__':
     print_sudoku()
     loop = 0
+    for k in range(3):
+        sudoku = find_nrs(sudoku)
+        loop += 1
+        print('loop', loop)
+        print_sudoku()
+        if solved():
+            break
     while not solved():
-        # sudoku = copy.deepcopy(sudoku_original)
-        sudoku = copy.deepcopy(sudoku_2)
+        sudoku = copy.deepcopy(current_sudoku_challenge)
         sudoku[first_zero_row()][first_zero_col()] = chance_nr_1()
         sudoku[second_zero_row()][second_zero_col()] = chance_nr_2()
         for k in range(10):
