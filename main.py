@@ -15,6 +15,7 @@ sudoku_nyteknik = [
     [0, 8, 0, 0, 0, 7, 0, 1, 0],
     [7, 0, 0, 0, 0, 1, 8, 0, 0]
 ]
+
 sudoku_2 = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -27,6 +28,18 @@ sudoku_2 = [
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ]
 
+sudoku_3 = [
+    [0, 0, 5, 3, 0, 0, 0, 0, 0],
+    [8, 0, 0, 0, 0, 0, 0, 2, 0],
+    [0, 7, 0, 0, 1, 0, 5, 0, 0],
+    [4, 0, 0, 0, 0, 5, 3, 0, 0],
+    [0, 1, 0, 0, 7, 0, 0, 0, 6],
+    [0, 0, 3, 2, 0, 0, 0, 8, 0],
+    [0, 6, 0, 5, 0, 0, 0, 0, 9],
+    [0, 0, 4, 0, 0, 0, 0, 3, 0],
+    [0, 0, 0, 0, 0, 9, 7, 0, 0]
+]
+
 sudoku_small = [
     [3, 0, 4, 0],
     [0, 1, 0, 2],
@@ -36,12 +49,14 @@ sudoku_small = [
 
 # current_sudoku_challenge = sudoku_nyteknik
 current_sudoku_challenge = sudoku_2
+# current_sudoku_challenge = sudoku_3
 # current_sudoku_challenge = sudoku_small
 sudoku = current_sudoku_challenge
 
 size = len(sudoku[0])
 ch_nr_1 = 0
 ch_nr_2 = 0
+ch_nr_3 = 0
 
 
 def print_sudoku():
@@ -161,6 +176,33 @@ def second_zero_col():
     return -1
 
 
+def third_zero_row():
+    global sudoku
+    zeros = 0
+    for row in range(size):
+        for col in range(size):
+            if sudoku[row][col] == 0:
+                zeros += 1
+                if zeros == 3:
+                    print('third_zero_row: ', row)
+                    return row
+    return -1
+
+
+def third_zero_col():
+    global sudoku
+    zeros = 0
+    for row in range(size):
+        for col in range(size):
+            if sudoku[row][col] == 0:
+                zeros += 1
+                # time.sleep(0.001)
+                if zeros == 1:              # TODO: Expect it to be "if zeros == 3:". Don´t understand???
+                    print('third_zero_col: ', col)
+                    return col
+    return -1
+
+
 def chance_nr_1():
     global ch_nr_1
     if ch_nr_1 == 9:
@@ -180,10 +222,21 @@ def chance_nr_2():
     return ch_nr_2
 
 
+def chance_nr_3():
+    global ch_nr_1
+    global ch_nr_2
+    global ch_nr_3
+    if ch_nr_1 == 1 and ch_nr_2 == 1:
+        ch_nr_3 += 1
+    if ch_nr_1 == 1 and ch_nr_2 == 1 and ch_nr_3 == 10:
+        ch_nr_3 = 1
+    return ch_nr_3
+
+
 if __name__ == '__main__':
     print_sudoku()
     loop = 0
-    for k in range(3):
+    for k in range(0):
         sudoku = find_nrs(sudoku)
         loop += 1
         print('loop', loop)
@@ -194,7 +247,8 @@ if __name__ == '__main__':
         sudoku = copy.deepcopy(current_sudoku_challenge)
         sudoku[first_zero_row()][first_zero_col()] = chance_nr_1()
         sudoku[second_zero_row()][second_zero_col()] = chance_nr_2()
-        for k in range(10):
+        sudoku[third_zero_row()][third_zero_col()] = chance_nr_3()
+        for k in range(6):
             sudoku = find_nrs(sudoku)
             loop += 1
             print('loop', loop)
