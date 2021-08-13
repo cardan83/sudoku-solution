@@ -58,7 +58,8 @@ ch_nr_1 = 0
 ch_nr_2 = 0
 ch_nr_3 = 0
 ch_nrs = []
-chance_nr_tot = 3
+chance_nr_tot = 2
+counter = 0
 
 
 def print_sudoku():
@@ -184,25 +185,19 @@ def chance_nr_3():
 def chance_nr(nr):
     global ch_nrs    # list
     global chance_nr_tot
+    global counter
     if len(ch_nrs) == 0:
         for i in range(chance_nr_tot):
-            if i+1 != chance_nr_tot:
-                ch_nrs.append(1)
+            ch_nrs.append(0)
+    if nr == 0:
+        counter += 1
+    for i in range(chance_nr_tot-1):        # Row 0 to next last
+        if counter % 9**(chance_nr_tot-1-nr) == 1 and nr == i:
+            if ch_nrs[nr] != 9:
+                ch_nrs[nr] = ch_nrs[nr] + 1
             else:
-                ch_nrs.append(0)
-    try:
-        if nr == 0 and ch_nrs[nr + 1] == 9 and ch_nrs[nr + 2] == 9:  # Rad 1
-            ch_nrs[nr] = ch_nrs[nr] + 1
-        # if nr == 0 and ch_nrs[nr] == 9:
-        #     return -1
-        if nr == 1 and ch_nrs[nr + 1] == 9:  # Rad 2
-            ch_nrs[nr] = ch_nrs[nr] + 1
-        if nr == 1 and ch_nrs[nr] == 10:
-            ch_nrs[nr] = 1
-    except IndexError:
-        pass  # list index out of range
-        # print('list index out of range')
-    if nr == 2:  # Rad 3
+                ch_nrs[nr] = 1
+    if nr == chance_nr_tot - 1:             # Last row
         if ch_nrs[nr] == 9:
             ch_nrs[nr] = 1
         else:
